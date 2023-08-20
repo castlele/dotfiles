@@ -4,6 +4,7 @@ This repo contains all of my configuration files. Now here you can found:
 
 * [neovim configuration](./nvim/README.md)
 * [tmux configuration](./tmux/README.mD)
+* [fonts](./fonts)
 
 ### Get started
 
