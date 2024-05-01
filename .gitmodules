@@ -4,7 +4,6 @@
     branch = main
 
 [submodule "tmux"]
-    path = tmux
-    url = git@github.com:castlele/tmux.git
+	path = tmux
+	url = https://github.com/castlele/tmux.git
     branch = master
-
