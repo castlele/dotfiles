@@ -36,11 +36,33 @@ cloneProjects() {
 }
 
 setupNeovim() {
-    echo "Set up Neovim"
+    echo "Setup Neovim"
+
+    cargo install tree-sitter-cli
+
+    ln -s $PWD/nvim/ $CONFIG_DIR/nvim
+
+    cd nvim
+    ./setup.sh
+    cd ..
 }
 
 setupTmux() {
     echo "Setup Tmux"
+
+    ln -s $PWD/tmux/ $CONFIG_DIR/tmux
+    cd tmux
+    ./setup.sh
+    cd ..
+}
+
+setupLazygit() {
+    echo "Setup Lazygit"
+
+    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+    tar xf lazygit.tar.gz lazygit
+    sudo install lazygit /usr/local/bin
 }
 
 installAlacritty() {
@@ -79,24 +101,6 @@ setupAlacritty() {
     cp .alacritty.toml ~/.alacritty.toml
 }
 
-symlink_dotfiles() {
-    if [ ! -d $alacritty_config_dir ]; then
-        echo "Creating symlink for alacritty config"
-        ln -s $pwd$alacritty_dir $alacritty_config_dir
-        cp alacritty.toml ~/.alacritty.toml
-    fi
-
-    if [ ! -d $nvim_config_dir ]; then
-        echo "Creating symlink for nvim config"
-        ln -s $pwd$nvim_submodule_dir $nvim_config_dir
-    fi
-
-    if [ ! -d $tmux_config_dir ]; then
-        echo "Creating symlink for tmux config"
-        ln -s $pwd$tmux_submodule_dir $tmux_config_dir
-    fi
-}
-
 setup_dotfiles() {
     echo "Configuration of nvim config"
     cd $nvim_config_dir
@@ -110,9 +114,12 @@ setup_dotfiles() {
 echo $PWD
 
 if [ -z $EMAIL ]; then
-    cloneProjects
-    installAlacritty
+    #cloneProjects
+    #installAlacritty
     #setupAlacritty
+    #setupTmux
+    #setupLazygit
+    setupNeovim
 else
     setupGit
 fi
