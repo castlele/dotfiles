@@ -47,10 +47,12 @@ installAlacritty() {
     echo "Downloading alacritty"
 
     if [[ $OS_TYPE == $LINUX_MINT* ]]; then
-        $INSTALLATION_CMD cmake
-        $INSTALLATION_CMD clang
+        $INSTALLATION_CMD cmake clang
+	$INSTALLATION_CMD pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3
         $INSTALLATION_CMD cargo
         cargo install alacritty
+	sudo mv ~/.cargo/bin/alacritty /usr/local/alacritty
+	sudo cp Alacritty.desktop /usr/share/applications/
     elif [[ $OS_TYPE == $MACOS* ]]; then
         $INSTALLATION_CMD cmake
     fi
@@ -110,7 +112,7 @@ echo $PWD
 if [ -z $EMAIL ]; then
     cloneProjects
     installAlacritty
-    setupAlacritty
+    #setupAlacritty
 else
     setupGit
 fi
