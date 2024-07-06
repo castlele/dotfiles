@@ -1,4 +1,14 @@
-#! /bin/sh
+#!/bin/bash
+
+OS_TYPE="$OSTYPE"
+LINUX_MINT="linux-gnu"
+MACOS="darwin"
+
+if [[ $OS_TYPE == $LINUX_MINT* ]]; then
+    INSTALLATION_CMD="sudo apt install"
+elif [[ $OS_TYPE == $MACOS* ]]; then
+    INSTALLATION_CMD="brew install"
+fi
 
 CONFIG_DIR="$HOME/.config"
 PWD=$(pwd)
@@ -33,21 +43,38 @@ setupTmux() {
     echo "Setup Tmux"
 }
 
+installAlacritty() {
+    echo "Downloading alacritty"
+
+    if [[ $OS_TYPE == $LINUX_MINT* ]]; then
+        $INSTALLATION_CMD cmake
+        $INSTALLATION_CMD clang
+        $INSTALLATION_CMD cargo
+        cargo install alacritty
+    elif [[ $OS_TYPE == $MACOS* ]]; then
+        $INSTALLATION_CMD cmake
+    fi
+}
+
 setupAlacritty() {
     echo "Creating symlink for alacritty config"
 
     createConfigDir
 
-    ALACRITTY_DIR="~/.config/alacritty/"
+    alacrittyDir="$CONFIG_DIR/alacritty/"
 
-    if [ ! -d $ALACRITTY_DIR ]; then
-        mkdir $ALACRITTY_DIR
+    if [ ! -d $alacrittyDir ]; then
+        mkdir $alacrittyDir
     fi
 
-    alacrittyDir="alacritty"
+    alacrittyThemeDir="alacritty/alacritty-theme"
 
-    ln -s $PWD/$alacrittyDir/alacritty-theme $CONFIG_DIR/$alacrittyDir
-    cp alacritty.toml ~/.alacritty.toml
+    if [ ! -d $alacrittyThemeDir ]; then
+        mkdir $alacrittyThemeDir
+    fi
+
+    ln -s $PWD/$alacrittyThemeDir $CONFIG_DIR/$alacrittyThemeDir
+    cp .alacritty.toml ~/.alacritty.toml
 }
 
 symlink_dotfiles() {
@@ -81,10 +108,10 @@ setup_dotfiles() {
 echo $PWD
 
 if [ -z $EMAIL ]; then
-    echo "NOT FIRST"
+    cloneProjects
+    installAlacritty
+    setupAlacritty
 else
     setupGit
 fi
 
-# cloneProjects
-# setupAlacritty
