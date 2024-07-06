@@ -1,16 +1,51 @@
 #! /bin/sh
 
-config_dir="$HOME/.config"
-nvim_submodule_dir="/nvim"
-nvim_config_dir=$config_dir$nvim_submodule_dir
-tmux_submodule_dir="/tmux"
-tmux_config_dir=$config_dir$tmux_submodule_dir
-alacritty_dir="/alacritty"
-alacritty_config_dir=$config_dir$alacritty_dir
-pwd=$(pwd)
+CONFIG_DIR="$HOME/.config"
+PWD=$(pwd)
+EMAIL=$1
 
-clone_projects() {
+createConfigDir() {
+    if [ ! -d "~/.config" ]; then
+        echo "Creating .config dir"
+    fi
+}
+
+setupGit() {
+    echo "Set up git"
+    echo "Generating new ssh key"
+    ssh-keygen -t ed25519 -C "$EMAIL"
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/id_ed25519
+    cat ~/.ssh/id_ed25519
+}
+
+cloneProjects() {
     git submodule update --init --recursive
+}
+
+setupNeovim() {
+    echo "Set up Neovim"
+}
+
+setupTmux() {
+    echo "Setup Tmux"
+}
+
+setupAlacritty() {
+    echo "Creating symlink for alacritty config"
+
+    createConfigDir
+
+    ALACRITTY_DIR="~/.config/alacritty/"
+
+    if [ ! -d $ALACRITTY_DIR ]; then
+        mkdir $ALACRITTY_DIR
+    fi
+
+    alacrittyDir="alacritty"
+
+    ln -s $PWD/$alacrittyDir/alacritty-theme $CONFIG_DIR/$alacrittyDir
+    cp alacritty.toml ~/.alacritty.toml
 }
 
 symlink_dotfiles() {
@@ -41,6 +76,13 @@ setup_dotfiles() {
     ./setup.sh
 }
 
-clone_projects
-symlink_dotfiles
-setup_dotfiles
+echo $PWD
+
+if [ -z $EMAIL ]; then
+    echo "NOT FIRST"
+else
+    setupGit
+fi
+
+# cloneProjects
+# setupAlacritty

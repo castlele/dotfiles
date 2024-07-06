@@ -1,9 +1,10 @@
 [submodule "nvim"]
-    path = nvim
-    url = git@github.com:castlele/nvim.git
-    branch = main
+	path = nvim
+	url = git@github.com:castlele/nvim.git
 
 [submodule "tmux"]
 	path = tmux
 	url = https://github.com/castlele/tmux.git
-    branch = master
+[submodule "alacritty/alacritty-theme"]
+	path = alacritty/alacritty-theme
+	url = git@github.com:alacritty/alacritty-theme.git

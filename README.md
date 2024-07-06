@@ -6,7 +6,28 @@ This repo contains all of my configuration files. Now here you can found:
 * [tmux configuration](./tmux/README.mD)
 * [fonts](./fonts)
 
-### Get started
+## Checklist
+
+- git
+    - ssh
+    - .gitconfig: username, editor
+- fonts
+- alacritty
+    - icon
+- tmux
+- neovim
+- Android Studio
+- languages
+- window manager
+- browser
+    - vimium
+- panels setup
+
+### Linux
+
+### MacOS
+
+## Get started
 
 On **clean system** clone the repo anywhere you want and run script:
 
