@@ -17,6 +17,8 @@ setupGit() {
     eval "$(ssh-agent -s)"
     ssh-add ~/.ssh/id_ed25519
     cat ~/.ssh/id_ed25519
+
+    cp gitconfig ~/.gitconfig
 }
 
 cloneProjects() {

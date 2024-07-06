@@ -1,0 +1,22 @@
+import = [
+    "~/.config/alacritty/alacritty-theme/themes/ayu_dark.toml",
+]
+
+[keyboard]
+bindings = [
+  { key = "Slash", mods = "Control", chars = "\u001f" },
+]
+
+[font]
+size = 25
+normal = { family = "UbuntuMono Nerd Font Mono" }
+bold = { family = "UbuntuMono Nerd Font Mono", style = "Bold" }
+bold_italic = { family = "UbuntuMono Nerd Font Mono", style = "Bold Italic" }
+italic = { family = "UbuntuMono Nerd Font Mono", style = "Italic" }
+
+[window]
+decorations = "none"
+
+[window.padding]
+x = 5
+y = 8
