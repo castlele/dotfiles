@@ -65,42 +65,6 @@ setupLazygit() {
     sudo install lazygit /usr/local/bin
 }
 
-installAlacritty() {
-    echo "Downloading alacritty"
-
-    if [[ $OS_TYPE == $LINUX_MINT* ]]; then
-        $INSTALLATION_CMD cmake clang
-	$INSTALLATION_CMD pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3
-        $INSTALLATION_CMD cargo
-        cargo install alacritty
-	sudo mv ~/.cargo/bin/alacritty /usr/local/alacritty
-	sudo cp Alacritty.desktop /usr/share/applications/
-    elif [[ $OS_TYPE == $MACOS* ]]; then
-        $INSTALLATION_CMD cmake
-    fi
-}
-
-setupAlacritty() {
-    echo "Creating symlink for alacritty config"
-
-    createConfigDir
-
-    alacrittyDir="$CONFIG_DIR/alacritty/"
-
-    if [ ! -d $alacrittyDir ]; then
-        mkdir $alacrittyDir
-    fi
-
-    alacrittyThemeDir="alacritty/alacritty-theme"
-
-    if [ ! -d $alacrittyThemeDir ]; then
-        mkdir $alacrittyThemeDir
-    fi
-
-    ln -s $PWD/$alacrittyThemeDir $CONFIG_DIR/$alacrittyThemeDir
-    cp .alacritty.toml ~/.alacritty.toml
-}
-
 setup_dotfiles() {
     echo "Configuration of nvim config"
     cd $nvim_config_dir
@@ -114,11 +78,9 @@ setup_dotfiles() {
 echo $PWD
 
 if [ -z $EMAIL ]; then
-    #cloneProjects
-    #installAlacritty
-    #setupAlacritty
-    #setupTmux
-    #setupLazygit
+    cloneProjects
+    setupTmux
+    setupLazygit
     setupNeovim
 else
     setupGit
