@@ -65,14 +65,10 @@ setupLazygit() {
     sudo install lazygit /usr/local/bin
 }
 
-setup_dotfiles() {
-    echo "Configuration of nvim config"
-    cd $nvim_config_dir
-    ./setup.sh
+setupKitty() {
+    echo "Setup Kitty"
 
-    echo "Configuration of tmux config"
-    cd $tmux_config_dir
-    ./setup.sh
+    ln -s $PWD/kitty/ $CONFIG_DIR/kitty
 }
 
 echo $PWD
@@ -82,6 +78,7 @@ if [ -z $EMAIL ]; then
     setupTmux
     setupLazygit
     setupNeovim
+    setupKitty
 else
     setupGit
 fi
