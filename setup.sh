@@ -71,6 +71,12 @@ setupKitty() {
     ln -s $PWD/kitty/ $CONFIG_DIR/kitty
 }
 
+setupYazi() {
+    echo "Setup Yazi"
+
+    ln -s $PWD/yazi/ $CONFIG_DIR/yazi
+}
+
 echo $PWD
 
 if [ -z $EMAIL ]; then
@@ -79,6 +85,7 @@ if [ -z $EMAIL ]; then
     setupLazygit
     setupNeovim
     setupKitty
+    setupYazi
 else
     setupGit
 fi

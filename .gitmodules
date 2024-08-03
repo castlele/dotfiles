@@ -9,3 +9,6 @@
 [submodule "kitty"]
 	path = kitty
 	url = git@github.com:castlele/kitty.git
+[submodule "yazi"]
+	path = yazi
+	url = git@github.com:castlele/yazi.git
