@@ -74,6 +74,9 @@ setupKitty() {
 setupYazi() {
     echo "Setup Yazi"
 
+    cd yazi
+    ./setup.sh
+    cd ..
     ln -s $PWD/yazi/ $CONFIG_DIR/yazi
 }
 
