@@ -1,0 +1,62 @@
+export PATH=/opt/homebrew/opt/ruby/bin:/opt/homebrew/lib/ruby/gems/3.0.0/bin:$PATH
+export PATH=/opt/homebrew/bin/lua-language-server:$PATH
+export PATH=/Users/castlelecs/dev/OpenSource/kotlin-language-server/server/build/install/server/bin/kotlin-language-server:$PATH
+export PATH="/Users/castlelecs/.deno/bin:$PATH"
+
+export ZSH="/Users/castlelecs/.oh-my-zsh"
+export ANDROID_HOME="/Users/castlelecs/Library/Android/sdk"
+export PATH="/usr/bin/java:$PATH"
+
+ZSH_THEME="robbyrussell"
+
+eval "$(rbenv init - zsh)"
+
+plugins=(git)
+
+source $ZSH/oh-my-zsh.sh
+
+# Aliases
+
+alias t="tmux attach -t 0"
+alias lg="lazygit"
+alias intellij="open -a /Applications/IntelliJ\ IDEA\ CE.app/"
+alias droid="open -a /Applications/Android\ Studio.app/"
+alias love="/Applications/love.app/Contents/MacOS/love"
+alias godot="open -a /Applications/Godot.app/"
+alias notes="cd ~/time_tracking/notes/2024/; nvim ."
+alias killDerived="rm -rf ~/Library/Developer/Xcode/DerivedData/*"
+alias killSpmCache="rm -rf ~/Library/Caches/org.swift.swiftpm; rm -rf ~/Library/org.swift.swiftpm"
+
+# MyOffice
+
+alias core="open CloudOfficeCore.xcworkspace"
+alias main="open CloudOffice.xcworkspace"
+alias mo="cd /Users/castlelecs/dev/MyOffice"
+alias mac4="ssh jenkins@10.100.5.63"
+alias mac5="ssh jenkins@10.100.38.163"
+
+# Common
+
+alias cnvim="cd /Users/castlelecs/.config/nvim"
+alias opens="cd /Users/castlelecs/dev/OpenSource"
+alias proj="cd /Users/castlelecs/dev/projects"
+alias kbase="cd /Users/castlelecs/dev/knowledge_base"
+alias leet="cd /Users/castlelecs/dev/knowledge_base/computer_science/algoes/leetcode"
+alias algo="cd /Users/castlelecs/dev/knowledge_base/computer_science/algoes"
+alias ctx="cd /Users/castlelecs/.config/tmux"
+alias dev="cd /Users/castlelecs/dev"
+alias kata="cd /Users/castlelecs/dev/knowledge_base/computer_science/algoes/kata"
+
+[ -s ~/.luaver/luaver ] && . ~/.luaver/luaver
+
+export JAVA_HOME=$(/usr/libexec/java_home)
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export PATH=$PATH:/opt/nvim-linux64/bin
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
