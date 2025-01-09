@@ -83,6 +83,12 @@ setupYazi() {
     ln -s $PWD/yazi/ $CONFIG_DIR/yazi
 }
 
+setupGhostty() {
+    echo "Setup ghostty"
+
+    ln -s $PWD/ghostty/ $CONFIG_DIR/ghostty
+}
+
 echo $PWD
 
 if [ -z $EMAIL ]; then
