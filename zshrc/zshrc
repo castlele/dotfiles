@@ -1,0 +1,41 @@
+export PATH=$HOME/.local/bin:$PATH
+
+# java
+export PATH=$HOME/.sdkman/candidates/java/current/bin/java:$PATH
+export JAVA_HOME=$HOME/.sdkman/candidates/java/current/bin/
+
+# go
+#export PATH=$(go env GOPATH)/bin:$PATH
+
+export ZSH="$HOME/.oh-my-zsh"
+
+ZSH_THEME="robbyrussell"
+
+plugins=(git)
+
+source $ZSH/oh-my-zsh.sh
+
+# Aliases
+
+alias t="tmux attach -t 0"
+alias lg="lazygit"
+
+alias notes="cd ~/notes/2025/; nvim ."
+
+alias cnvim="cd $HOME/.config/nvim"
+alias opens="cd $HOME/dev/open_source"
+alias proj="cd $HOME/dev/projects"
+alias kbase="cd $HOME/dev/knowledge_base"
+alias ctx="cd $HOME/.config/tmux"
+alias dev="cd $HOME/dev"
+
+# MACOS Specific
+if [[ $OS_TYPE == "darwin*" ]]; then
+    alias love="/Applications/love.app/Contents/MacOS/love"
+    alias droid="open -a /Applications/Android\ Studio.app/"
+    alias intellij="open -a /Applications/IntelliJ\ IDEA\ CE.app/"
+    alias killDerived="rm -rf ~/Library/Developer/Xcode/DerivedData/*"
+    alias killSpmCache="rm -rf ~/Library/Caches/org.swift.swiftpm; rm -rf ~/Library/org.swift.swiftpm"
+
+    export ANDROID_HOME="$HOME/Library/Android/sdk"
+fi

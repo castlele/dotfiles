@@ -89,10 +89,31 @@ setupGhostty() {
     ln -s $PWD/ghostty/ $CONFIG_DIR/ghostty
 }
 
+setupZsh() {
+    if [[ $OS_TYPE == $LINUX_MINT* ]]; then
+        sudo apt install zsh
+        chsh -s $(which zsh)
+
+        echo "Restart your computer :)"
+    fi
+}
+
+setupOhMyZsh() {
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+}
+
+setupZshContent() {
+    cat ./zshrc/zshrc > ~/.zshrc
+    echo "Run `source ~/.zshrc` to apply changes"
+}
+
 echo $PWD
 
 if [ -z $EMAIL ]; then
     cloneProjects
+    setupZsh
+    setupOhMyZsh
+    setupZshContent
     setupTmux
     setupLazygit
     setupNeovim
