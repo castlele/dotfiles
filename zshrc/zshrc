@@ -15,6 +15,8 @@ plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
+export EDITOR=nvim
+
 # Aliases
 
 alias t="tmux attach -t 0"
@@ -25,7 +27,7 @@ alias notes="cd ~/notes/2025/; nvim ."
 alias cnvim="cd $HOME/.config/nvim"
 alias opens="cd $HOME/dev/open_source"
 alias proj="cd $HOME/dev/projects"
-alias kbase="cd $HOME/dev/knowledge_base"
+alias kbase="cd $HOME/dev/kbase"
 alias ctx="cd $HOME/.config/tmux"
 alias dev="cd $HOME/dev"
 
