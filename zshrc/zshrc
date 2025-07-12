@@ -41,3 +41,8 @@ if [[ $OS_TYPE == "darwin*" ]]; then
 
     export ANDROID_HOME="$HOME/Library/Android/sdk"
 fi
+
+if [[ -d ~/dev/open_source/emsdk/ ]]; then
+    export EMSDK_QUIET=1
+    source ~/dev/open_source/emsdk/emsdk_env.sh
+fi
