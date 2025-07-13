@@ -1,7 +1,7 @@
 export PATH=$HOME/.local/bin:$PATH
 
 # java
-export PATH=$HOME/.sdkman/candidates/java/current/bin/java:$PATH
+export PATH=$HOME/.sdkman/candidates/java/current/bin/:$PATH
 export JAVA_HOME=$HOME/.sdkman/candidates/java/current/bin/
 export ANDROID_HOME="$HOME/.local/android_sdk/"
 export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
