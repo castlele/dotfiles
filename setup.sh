@@ -107,6 +107,16 @@ setupZshContent() {
     echo "Run `source ~/.zshrc` to apply changes"
 }
 
+setupRmpc() {
+    $INSTALLATION_CMD rmpc
+    ln -s $PWD/rmpc $CONFIG_DIR/rmpc
+}
+
+setupMpd() {
+    $INSTALLATION_CMD mpd mpc
+    ln -s $PWD/mpd $CONFIG_DIR/mpd
+}
+
 echo $PWD
 
 if [ -z $EMAIL ]; then
@@ -119,6 +129,8 @@ if [ -z $EMAIL ]; then
     setupNeovim
     setupKitty
     setupYazi
+    setupMpd
+    setupRmpc
 else
     setupGit
 fi
