@@ -113,8 +113,13 @@ setupRmpc() {
 }
 
 setupMpd() {
-    $INSTALLATION_CMD mpd mpc
+    $INSTALLATION_CMD mpd
     ln -s $PWD/mpd $CONFIG_DIR/mpd
+
+    if [[ $OS_TYPE == $MACOS ]]; then
+        cp $CONFIG_DIR/mpd.mpd.plist ~/Library/LaunchAgents/
+        launchctl load ~/Library/LaunchAgents/mpd.mpd.plist
+    fi
 }
 
 echo $PWD
