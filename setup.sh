@@ -1,10 +1,10 @@
 #!/bin/bash
 
 OS_TYPE="$OSTYPE"
-LINUX_MINT="linux-gnu"
+LINUX="linux-gnu"
 MACOS="darwin"
 
-if [[ $OS_TYPE == $LINUX_MINT* ]]; then
+if [[ $OS_TYPE == $LINUX* ]]; then
     INSTALLATION_CMD="sudo apt install"
 elif [[ $OS_TYPE == $MACOS* ]]; then
     INSTALLATION_CMD="brew install"
@@ -60,7 +60,7 @@ setupTmux() {
 setupLazygit() {
     echo "Setup Lazygit"
 
-    if [[ $OS_TYPE == $LINUX_MINT* ]]; then
+    if [[ $OS_TYPE == $LINUX* ]]; then
         LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
         curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
         tar xf lazygit.tar.gz lazygit
@@ -90,7 +90,7 @@ setupGhostty() {
 }
 
 setupZsh() {
-    if [[ $OS_TYPE == $LINUX_MINT* ]]; then
+    if [[ $OS_TYPE == $LINUX* ]]; then
         sudo apt install zsh
         chsh -s $(which zsh)
 
@@ -122,21 +122,57 @@ setupMpd() {
     fi
 }
 
-echo $PWD
+setupCSConfig() {
+    echo "Setting up CS2 config"
 
-if [ -z $EMAIL ]; then
-    cloneProjects
-    setupZsh
-    setupOhMyZsh
-    setupZshContent
-    setupTmux
-    setupLazygit
-    setupNeovim
-    setupKitty
-    setupYazi
-    setupMpd
-    setupRmpc
-else
-    setupGit
-fi
+    CS_CONF_FILE_NAME=castle.cfg
+    CS_CONF_PATH="$PWD/cs/$CS_CONF_FILE_NAME"
+    CS_CONF_DIR_PATH="$HOME/.var/app/com.valvesoftware.Steam/data/Steam/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg"
+
+    if [[ $OS_TYPE == $LINUX ]]; then
+        if [[ -d "$CS_CONF_DIR_PATH" ]]; then
+            ln -s "$CS_CONF_PATH" "$CS_CONF_DIR_PATH/$CS_CONF_FILE_NAME"
+            echo "Setup symlink for CS config at: ""$CS_CONF_DIR_PATH/$CS_CONF_FILE_NAME"
+        else
+            echo "No CS config directory: $CS_CONF_DIR_PATH"
+            echo "Check if the directory path is right and change it if necessary or install the game if it isn't"
+        fi
+    else
+        echo "Unsupported OS type: $OS_TYPE"
+    fi
+
+    echo "Finished setting up CS2 config"
+}
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -all)
+            cloneProjects
+            setupZsh
+            setupOhMyZsh
+            setupZshContent
+            setupTmux
+            setupLazygit
+            setupNeovim
+            setupKitty
+            setupYazi
+            setupMpd
+            setupRmpc
+            setupCSConfig
+            break
+            ;;
+        -g | --setup-git)
+            setupGit
+            shift 1
+            ;;
+        -cs | --setup-cs)
+            setupCSConfig
+            shift 1
+            ;;
+        * | h | --help) shift;
+            echo "Usage: ./setup.sh -all"
+            break;
+            ;;
+    esac
+done
 
