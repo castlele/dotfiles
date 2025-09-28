@@ -18,6 +18,7 @@ plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
 export EDITOR=nvim
+export TIMELUA_STATUS_FILE="$HOME/.timelua"
 
 # Aliases
 
@@ -40,6 +41,11 @@ if [[ $OS_TYPE == "darwin*" ]]; then
     alias intellij="open -a /Applications/IntelliJ\ IDEA\ CE.app/"
     alias killDerived="rm -rf ~/Library/Developer/Xcode/DerivedData/*"
     alias killSpmCache="rm -rf ~/Library/Caches/org.swift.swiftpm; rm -rf ~/Library/org.swift.swiftpm"
+fi
+
+# Linux Specific
+if [[ $OS_TYPE == "linux*" ]]; then
+    export CS_HOME="$HOME/.var/app/com.valvesoftware.Steam/data/Steam/steamapps/common/Counter-Strike Global Offensive/game/csgo/"
 fi
 
 if [[ -d ~/dev/open_source/emsdk/ ]]; then
