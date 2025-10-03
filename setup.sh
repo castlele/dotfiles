@@ -169,6 +169,10 @@ while [[ $# -gt 0 ]]; do
             setupCSConfig
             shift 1
             ;;
+        -cat | --setup-kitty)
+            setupKitty
+            shift 1
+            ;;
         * | h | --help) shift;
             echo "Usage: ./setup.sh -all"
             break;
