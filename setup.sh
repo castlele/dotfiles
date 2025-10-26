@@ -119,6 +119,8 @@ setupMpd() {
     if [[ $OS_TYPE == $MACOS ]]; then
         cp $CONFIG_DIR/mpd.mpd.plist ~/Library/LaunchAgents/
         launchctl load ~/Library/LaunchAgents/mpd.mpd.plist
+    else
+        sudo systemctl --user start mpd
     fi
 }
 
