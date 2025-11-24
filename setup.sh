@@ -2,7 +2,7 @@
 
 OS_TYPE="$OSTYPE"
 LINUX="linux-gnu"
-MACOS="darwin"
+MACOS="darwin*"
 
 if [[ $OS_TYPE == $LINUX* ]]; then
     INSTALLATION_CMD="sudo apt install"
@@ -173,6 +173,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -cat | --setup-kitty)
             setupKitty
+            shift 1
+            ;;
+        -mpd | --setup-mpd)
+            setupMpd
             shift 1
             ;;
         * | h | --help) shift;

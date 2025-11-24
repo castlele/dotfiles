@@ -1,8 +1,10 @@
-sw_volume: 37
+sw_volume: 5
 audio_device_state:1:CoreAudio Output
-state: stop
-random: 0
-repeat: 0
+state: pause
+current: 0
+time: 51.099000000000004
+random: 1
+repeat: 1
 single: 0
 consume: 0
 crossfade: 0
@@ -10,4 +12,5 @@ mixrampdb: 0
 mixrampdelay: -1
 lastloadedplaylist: 
 playlist_begin
+0:SOIKA/1-SOIKA-В-пекло-UFTAA7.flac
 playlist_end
