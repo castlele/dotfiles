@@ -25,7 +25,7 @@ export TIMELUA_STATUS_FILE="$HOME/.timelua"
 alias t="tmux attach -t 0"
 alias lg="lazygit"
 
-alias notes="cd ~/notes/2025/; nvim ."
+alias notes="cd ~/notes/2026/; nvim ."
 
 alias cnvim="cd $HOME/.config/nvim"
 alias opens="cd $HOME/dev/open_source"
