@@ -1,6 +1,5 @@
 export PATH=$HOME/.local/bin:$PATH
 
-# java
 export PATH=$HOME/.sdkman/candidates/java/current/bin/:$PATH
 export JAVA_HOME=$HOME/.sdkman/candidates/java/current/
 export ANDROID_HOME="$HOME/.local/android_sdk/"
@@ -22,7 +21,7 @@ export TIMELUA_STATUS_FILE="$HOME/.timelua"
 
 # Aliases
 
-alias t="tmux attach -t 0"
+alias t="source $HOME/.config/tmux/init_session.sh"
 alias lg="lazygit"
 
 alias notes="cd ~/notes/2026/; nvim ."
