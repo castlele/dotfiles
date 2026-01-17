@@ -9,7 +9,7 @@
     <array>
         <string>/opt/homebrew/bin/mpd</string>
         <string>--no-daemon</string>
-        <string>/Users/castlelecs/.config/mpd/mpd.macos.conf</string>
+        <string>/Users/castlelecs/.config/mpd/mpd.conf</string>
     </array>
 
     <key>RunAtLoad</key>
