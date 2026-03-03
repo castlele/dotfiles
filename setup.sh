@@ -146,6 +146,17 @@ setupCSConfig() {
     echo "Finished setting up CS2 config"
 }
 
+setupHammerSpoon() {
+    echo "Setting up Hammerspoon"
+
+    if [[ $OS_TYPE == $MACOS ]]; then
+        # brew install hammerspoon --cask
+        ln -s $PWD/hammerspoon/ $HOME/.hammerspoon
+    else
+        echo "Unsupported os, can't install and setup hammerspoon"
+    fi
+}
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -all)
@@ -177,6 +188,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -mpd | --setup-mpd)
             setupMpd
+            shift 1
+            ;;
+        -hs | --setup-hammerspoon)
+            setupHammerSpoon
             shift 1
             ;;
         * | h | --help) shift;
