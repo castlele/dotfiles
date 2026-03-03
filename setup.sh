@@ -150,7 +150,7 @@ setupHammerSpoon() {
     echo "Setting up Hammerspoon"
 
     if [[ $OS_TYPE == $MACOS ]]; then
-        # brew install hammerspoon --cask
+        brew install hammerspoon --cask
         ln -s $PWD/hammerspoon/ $HOME/.hammerspoon
     else
         echo "Unsupported os, can't install and setup hammerspoon"
@@ -167,7 +167,6 @@ while [[ $# -gt 0 ]]; do
             setupTmux
             setupLazygit
             setupNeovim
-            setupKitty
             setupYazi
             setupMpd
             setupRmpc
@@ -184,6 +183,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -cat | --setup-kitty)
             setupKitty
+            shift 1
+            ;;
+        -ghostty | --setup-ghostty)
+            setupGhostty
             shift 1
             ;;
         -mpd | --setup-mpd)
