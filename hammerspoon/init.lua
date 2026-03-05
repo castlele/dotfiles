@@ -22,3 +22,5 @@ for appPath, key in pairs(apps) do
       openApp(appPath)
    end)
 end
+
+hs.loadSpoon("Cherry")
