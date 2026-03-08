@@ -15,6 +15,7 @@ local apps = {
    ["Telegram.app"] = "M", -- Messanger
    ["Music.app"] = "P", -- Player
    ["Nirvana.app"] = "N", -- Nirvana
+   ["Obsidian.app"] = "O", -- Obsidian
 }
 
 for appPath, key in pairs(apps) do
