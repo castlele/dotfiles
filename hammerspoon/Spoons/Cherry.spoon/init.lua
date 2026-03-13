@@ -11,14 +11,17 @@ obj.__index = obj
 -- Metadata
 obj.name = "Cherry"
 obj.version = "0.1"
-obj.author = "Daniel Marques <danielbmarques@gmail.com> and Omar El-Domeiri <omar@doesnotexist.com>"
+obj.author =
+   "Daniel Marques <danielbmarques@gmail.com> and Omar El-Domeiri <omar@doesnotexist.com>"
 obj.license = "MIT"
 obj.homepage = "https://github.com/Hammerspoon/Spoons"
 
 -- Settings
 
 -- timer duration in minutes
-obj.duration = 25
+obj.workDuration = 25
+
+obj.breakDuration = 5
 
 -- set this to true to always show the menubar item
 obj.alwaysShow = true
@@ -39,9 +42,8 @@ obj.sound = nil
 -- obj.sound = hs.sound.getByFile("System/Library/PrivateFrameworks/ScreenReader.framework/Versions/A/Resources/Sounds")
 
 obj.defaultMapping = {
-  start = {{"cmd", "ctrl", "alt"}, "C"}
+   start = { { "cmd", "ctrl", "alt" }, "C" },
 }
-
 
 --- Cherry:bindHotkeys(mapping)
 --- Method
@@ -50,45 +52,42 @@ obj.defaultMapping = {
 --- Parameters:
 ---  * mapping - A table containing hotkey details for the following items:
 ---   * start - start the pomodoro timer (Default: cmd-ctrl-alt-C)
-function obj:bindHotkeys(mapping)
-  if (self.hotkey) then
-     self.hotkey.delete()
-  end
-
-  if mapping and mapping["start"] then
-    hs.hotkey.bind(mapping["start"][1], mapping["start"][2], function() self:start() end)
-  else
-    hs.hotkey.bind(self.defaultMapping["start"][1], self.defaultMapping["start"][2], function() self:start() end)
-  end
-end
-
+function obj:bindHotkeys(mapping) end
 
 function obj:init()
-  self.menu = hs.menubar.new(self.alwaysShow)
-  self:reset()
+   self.menu = hs.menubar.new(self.alwaysShow)
+   self:reset()
 end
-
 
 function obj:reset()
-  local items = {
-    { title = "Start", fn = function() self:start() end }
-  }
-  self.menu:setMenu(items)
-  self.menu:setTitle("🍒")
-  self.timerRunning = false
-  if not self.alwaysShow then
+   local items = {
+      {
+         title = "Start work",
+         fn = function()
+            self:startWork()
+         end,
+      },
+      {
+         title = "Start break",
+         fn = function()
+            self:startBreak()
+         end,
+      },
+   }
+   self.menu:setMenu(items)
+   self.menu:setTitle("🍒")
+   self.timerRunning = false
+   if not self.alwaysShow then
       self.menu:removeFromMenuBar()
-  end
+   end
 end
-
 
 function obj:updateTimerString()
-    local minutes = math.floor(self.timeLeft / 60)
-    local seconds = self.timeLeft - (minutes * 60)
-    local timerString = string.format("%02d:%02d 🍒", minutes, seconds)
-    self.menu:setTitle(timerString)
+   local minutes = math.floor(self.timeLeft / 60)
+   local seconds = self.timeLeft - (minutes * 60)
+   local timerString = string.format("%02d:%02d 🍒", minutes, seconds)
+   self.menu:setTitle(timerString)
 end
-
 
 --- Cherry:popup()
 --- Method
@@ -100,27 +99,29 @@ end
 --- Returns:
 ---  * None
 function obj:popup()
-  if 0 < self.alertDuration then
-    hs.alert.show("Done! 🍒", { textSize = self.alertTextSize }, self.alertDuration)
-  end
-  if self.notification then
-    self.notification:send()
-  end
-  if self.sound then
-    self.sound:play()
-  end
+   if 0 < self.alertDuration then
+      hs.alert.show(
+         "Done! 🍒",
+         { textSize = self.alertTextSize },
+         self.alertDuration
+      )
+   end
+   if self.notification then
+      self.notification:send()
+   end
+   if self.sound then
+      self.sound:play()
+   end
 end
-
 
 function obj:tick()
-  self.timeLeft = self.timeLeft - 1
-  self:updateTimerString()
-  if self.timeLeft <= 0 then
-    self:reset()
-    self:popup()
-  end
+   self.timeLeft = self.timeLeft - 1
+   self:updateTimerString()
+   if self.timeLeft <= 0 then
+      self:reset()
+      self:popup()
+   end
 end
-
 
 --- Cherry:start()
 --- Method
@@ -131,32 +132,62 @@ end
 ---
 --- Returns:
 ---  * None
-function obj:start(resume)
-  if not self.menu:isInMenuBar() then
-    self.menu:returnToMenuBar()
-  end
-  if not resume then
-     self.timeLeft = self.duration * 60
-     self:updateTimerString()
-  end
-  self.timerRunning = true
-  self.timer = hs.timer.doWhile(function() return self.timerRunning end, function() self:tick() end, 1)
-  local items = {
-    { title = "Stop",  fn = function() self:reset() end },
-    { title = "Pause", fn = function() self:pause() end }
-  }
-  self.menu:setMenu(items)
+function obj:startWork(resume)
+   self:startTimer(self.workDuration, resume)
 end
 
+function obj:startBreak(resume)
+   self:startTimer(self.breakDuration, resume)
+end
+
+function obj:startTimer(time, resume)
+   if not self.menu:isInMenuBar() then
+      self.menu:returnToMenuBar()
+   end
+   if not resume then
+      self.timeLeft = time * 60
+      self:updateTimerString()
+   end
+   self.timerRunning = true
+   self.timer = hs.timer.doWhile(function()
+      return self.timerRunning
+   end, function()
+      self:tick()
+   end, 1)
+   local items = {
+      {
+         title = "Stop",
+         fn = function()
+            self:reset()
+         end,
+      },
+      {
+         title = "Pause",
+         fn = function()
+            self:pause()
+         end,
+      },
+   }
+   self.menu:setMenu(items)
+end
 
 function obj:pause()
-  self.timerRunning = false
-  local items = {
-    { title = "Stop", fn = function() self:reset() end },
-    { title = "Resume", fn = function() self:start(true) end }
-  }
-  self.menu:setMenu(items)
+   self.timerRunning = false
+   local items = {
+      {
+         title = "Stop",
+         fn = function()
+            self:reset()
+         end,
+      },
+      {
+         title = "Resume",
+         fn = function()
+            self:startWork(true)
+         end,
+      },
+   }
+   self.menu:setMenu(items)
 end
-
 
 return obj
