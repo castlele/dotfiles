@@ -157,6 +157,19 @@ setupHammerSpoon() {
     fi
 }
 
+setupRunOrRaise() {
+    echo "Setting up run-or-raise gnome extension"
+
+    if [[ $OS_TYPE == $LINUX ]]; then
+        ln -s $PWD/run-or-raise/ $CONFIG_DIR/run-or-raise
+
+        echo "If you don't have the extension itself yet, please install it manually on:"
+        echo "https://extensions.gnome.org/extension/1336/run-or-raise/"
+    else
+        echo "Unsupported os, can't install and setup run-or-raise gnome extension"
+    fi
+}
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -all)
@@ -195,6 +208,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -hs | --setup-hammerspoon)
             setupHammerSpoon
+            shift 1
+            ;;
+        -ror | --setup-run-or-raise)
+            setupRunOrRaise
             shift 1
             ;;
         * | h | --help) shift;
