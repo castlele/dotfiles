@@ -186,6 +186,10 @@ while [[ $# -gt 0 ]]; do
             setupCSConfig
             break
             ;;
+        -lg | --setup-lazygit)
+            setupLazygit
+            shift 1
+            ;;
         -g | --setup-git)
             setupGit
             shift 1
@@ -204,6 +208,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         -mpd | --setup-mpd)
             setupMpd
+            setupRmpc
             shift 1
             ;;
         -hs | --setup-hammerspoon)
