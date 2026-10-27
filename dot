@@ -72,11 +72,13 @@ function Dot:abort(msg)
 end
 
 function Dot:printHelp()
-  print("dot --all             init every project")
-  print("dot <name>            init project by name")
-  print("dot <name1, name2...> init projects passed by name")
-  print("dot deinit --all      deinit all projects")
-  print("dot deinit <name>     deinit project by name")
+  print("dot init --all               init every project")
+  print("dot init <name>              init project by name")
+  print(
+    "dot init <name1, name2...>   init projects passed by name separated by space")
+  print("dot deinit --all             deinit all projects")
+  print("dot deinit <name>            deinit project by name separated by space")
+  print("dot deinit <name1, name2...> deinit project by name separated by space")
   self:exit(0)
 end
 
@@ -105,14 +107,32 @@ end
 
 local function init(projects)
   for _, proj in ipairs(projects) do
+    local ok, projFile = pcall(dofile, proj .. "/dot.lua")
+
+    if ok then
+      if not projFile then
+        Dot:w(string.format("No project file found: %s!", proj))
+      elseif not projFile.init then
+        Dot:w(string.format("No init function found for project: %s!", proj))
+      else
+        projFile.init(proj)
+      end
+    else
+      Dot:w("Can't run dot.lua file for project: " .. proj)
+    end
+  end
+end
+
+local function deinit(projects)
+  for _, proj in ipairs(projects) do
     local projFile = dofile(proj .. "/dot.lua")
 
     if not projFile then
       Dot:w(string.format("No project file found: %s!", proj))
     elseif not projFile.init then
-      Dot:w(string.format("No init function found for project: %s!", proj))
+      Dot:w(string.format("No deinit function found for project: %s!", proj))
     else
-      projFile.init(proj)
+      projFile.deinit(proj)
     end
   end
 end
@@ -120,14 +140,35 @@ end
 local function main()
   assertArguments()
 
-  for _, arg in ipairs(args) do
-    if string.find(string.lower(arg), "help") then
+  local cmd = args[1]
+
+  local function execute(command, name)
+    if #args <= 1 then
+      Dot:w("Don't know what to " .. name)
       Dot:printHelp()
     end
 
-    if arg == "--all" then
-      init(configs)
+    if args[2] == "--all" then
+      command(configs)
+    else
+      local names = {}
+
+      for i = 2, #args do
+        table.insert(names, args[i])
+      end
+
+      command(names)
     end
+  end
+
+  if cmd == "init" then
+    execute(init, cmd)
+  elseif cmd == "deinit" then
+    execute(deinit, cmd)
+  elseif string.find(string.lower(arg), "help") then
+    Dot:printHelp()
+  else
+    Dot:printHelp()
   end
 end
 
