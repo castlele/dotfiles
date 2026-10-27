@@ -1,0 +1,134 @@
+#!lua
+
+Dot = {}
+
+Dot.home = (function()
+  local home = os.getenv("HOME")
+
+  if not home then
+    Dot:abort("Can't get $HOME value")
+  end
+
+  return home
+end)()
+
+Dot.configPath = (function()
+  return Dot.home .. "/.config"
+end)()
+
+---@return number: result value. 0 is success
+function Dot:symlink(src, dst)
+  local _, err = self:exec(string.format("ln -s %s %s", src, dst))
+
+  if err then
+    self:e("got error during symlink creation: " .. err)
+    return -1
+  end
+
+  return 0
+end
+
+---Equals to pwd in terminal
+---@param proj string project name from with pwd is requested
+---@return string?
+function Dot:pwd(proj)
+  local pwd, err = self:exec("pwd")
+
+  if err then
+    self:e("got error during 'pwd' command execution: " .. err)
+    return
+  end
+
+  if not pwd then
+    self:e("can't get result of 'pwd' command")
+    return
+  end
+
+  if proj then
+    return pwd .. "/" .. proj
+  end
+
+  return pwd
+end
+
+---@return T?, string? - returns result or error message
+function Dot:exec(cmd)
+  local handle, err = io.popen(cmd)
+
+  if err or not handle then
+    return nil, err
+  end
+
+  local result = handle:read("*l")
+
+  handle:close()
+
+  return result
+end
+
+function Dot:abort(msg)
+  Dot:e(msg)
+  Dot:exit(-1)
+end
+
+function Dot:printHelp()
+  print("dot --all             init every project")
+  print("dot <name>            init project by name")
+  print("dot <name1, name2...> init projects passed by name")
+  print("dot deinit --all      deinit all projects")
+  print("dot deinit <name>     deinit project by name")
+  self:exit(0)
+end
+
+function Dot:w(msg)
+  print(string.format("⚠️ \27[33m%s\27[0m", msg))
+end
+
+function Dot:e(msg)
+  print(string.format("🚨 \27[31m%s\27[0m", msg))
+end
+
+function Dot:exit(code)
+  os.exit(code)
+end
+
+local configs = {
+  "claude",
+}
+local args = { ... }
+
+local function assertArguments()
+  if #args == 0 then
+    Dot:printHelp()
+  end
+end
+
+local function init(projects)
+  for _, proj in ipairs(projects) do
+    local projFile = dofile(proj .. "/dot.lua")
+
+    if not projFile then
+      Dot:w(string.format("No project file found: %s!", proj))
+    elseif not projFile.init then
+      Dot:w(string.format("No init function found for project: %s!", proj))
+    else
+      projFile.init(proj)
+    end
+  end
+end
+
+local function main()
+  assertArguments()
+
+  for _, arg in ipairs(args) do
+    if string.find(string.lower(arg), "help") then
+      Dot:printHelp()
+    end
+
+    if arg == "--all" then
+      init(configs)
+    end
+  end
+end
+
+main()

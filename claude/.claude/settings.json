@@ -1,0 +1,32 @@
+{
+  "model": "sonnet",
+  "enabledPlugins": {
+    "swift-lsp@claude-plugins-official": true,
+    "kotlin-lsp@claude-plugins-official": true,
+    "mattpocock-skills@claude-plugins-official": true,
+    "figma@claude-plugins-official": true,
+    "ponytail@ponytail": true
+  },
+  "extraKnownMarketplaces": {
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    }
+  },
+  "outputStyle": "Terse",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    },
+    "claude-haiku-4-5": {
+      "effortLevel": "high"
+    },
+    "claude-sonnet-5-5": {
+      "effortLevel": "high"
+    }
+  },
+  "tui": "fullscreen",
+  "agentPushNotifEnabled": true
+}
