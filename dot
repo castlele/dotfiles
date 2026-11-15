@@ -1,5 +1,8 @@
 #!lua
 
+-- TODO: add parallel tasks by introducing of the C runtime
+
+---@class Dot
 Dot = {}
 
 Dot.home = (function()
@@ -16,12 +19,15 @@ Dot.configPath = (function()
   return Dot.home .. "/.config"
 end)()
 
+Dot.log = require("dottools.log")
+Dot.ui = require("dottools.ui")
+
 ---@return number: result value. 0 is success
 function Dot:symlink(src, dst)
   local _, err = self:exec(string.format("ln -s %s %s", src, dst))
 
   if err then
-    self:e("got error during symlink creation: " .. err)
+    self.log.e("got error during symlink creation: " .. err)
     return -1
   end
 
@@ -35,12 +41,12 @@ function Dot:pwd(proj)
   local pwd, err = self:exec("pwd")
 
   if err then
-    self:e("got error during 'pwd' command execution: " .. err)
+    self.log.e("got error during 'pwd' command execution: " .. err)
     return
   end
 
   if not pwd then
-    self:e("can't get result of 'pwd' command")
+    self.log.e("can't get result of 'pwd' command")
     return
   end
 
@@ -67,7 +73,7 @@ function Dot:exec(cmd)
 end
 
 function Dot:abort(msg)
-  Dot:e(msg)
+  Dot.log.e(msg)
   Dot:exit(-1)
 end
 
@@ -82,20 +88,13 @@ function Dot:printHelp()
   self:exit(0)
 end
 
-function Dot:w(msg)
-  print(string.format("⚠️ \27[33m%s\27[0m", msg))
-end
-
-function Dot:e(msg)
-  print(string.format("🚨 \27[31m%s\27[0m", msg))
-end
-
 function Dot:exit(code)
   os.exit(code)
 end
 
 local configs = {
   "claude",
+  "test",
 }
 local args = { ... }
 
@@ -111,14 +110,14 @@ local function init(projects)
 
     if ok then
       if not projFile then
-        Dot:w(string.format("No project file found: %s!", proj))
+        Dot.log.w(string.format("No project file found: %s!", proj))
       elseif not projFile.init then
-        Dot:w(string.format("No init function found for project: %s!", proj))
+        Dot.log.w(string.format("No init function found for project: %s!", proj))
       else
         projFile.init(proj)
       end
     else
-      Dot:w("Can't run dot.lua file for project: " .. proj)
+      Dot.log.w("Can't run dot.lua file for project: " .. proj)
     end
   end
 end
@@ -128,9 +127,9 @@ local function deinit(projects)
     local projFile = dofile(proj .. "/dot.lua")
 
     if not projFile then
-      Dot:w(string.format("No project file found: %s!", proj))
+      Dot.log.w(string.format("No project file found: %s!", proj))
     elseif not projFile.init then
-      Dot:w(string.format("No deinit function found for project: %s!", proj))
+      Dot.log.w(string.format("No deinit function found for project: %s!", proj))
     else
       projFile.deinit(proj)
     end
@@ -144,7 +143,7 @@ local function main()
 
   local function execute(command, name)
     if #args <= 1 then
-      Dot:w("Don't know what to " .. name)
+      Dot.log.w("Don't know what to " .. name)
       Dot:printHelp()
     end
 

@@ -4,7 +4,7 @@ local function init(name)
   local pwd = Dot:pwd(name)
 
   if not pwd then
-    Dot:w("can't get path to the project, skipping: " .. name)
+    Dot.log.w("can't get path to the project, skipping: " .. name)
     return
   end
 
