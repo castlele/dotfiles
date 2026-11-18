@@ -1,6 +1,7 @@
 #!lua
 
 -- TODO: add parallel tasks by introducing of the C runtime
+-- TODO: fix installation command progress
 
 ---@class Dot
 Dot = {}
@@ -62,34 +63,26 @@ local function assertArguments()
   end
 end
 
-local function init(projects)
+--- @param projects table<string>
+--- @param funName string
+local function runForProject(projects, funName)
   for _, proj in ipairs(projects) do
     local ok, projFile = pcall(dofile, proj .. "/dot.lua")
 
     if ok then
       if not projFile then
         Dot.w(string.format("No project file found: %s!", proj))
-      elseif not projFile.init then
-        Dot.w(string.format("No init function found for project: %s!", proj))
+      elseif not projFile[funName] then
+        Dot.w(string.format(
+          "No %s function found for project: %s!",
+          funName, proj
+        ))
       else
-        projFile.init(proj)
+        local fun = projFile[funName]
+        fun(proj)
       end
     else
-      Dot.w("Can't run dot.lua file for project: " .. proj)
-    end
-  end
-end
-
-local function deinit(projects)
-  for _, proj in ipairs(projects) do
-    local projFile = dofile(proj .. "/dot.lua")
-
-    if not projFile then
-      Dot.w(string.format("No project file found: %s!", proj))
-    elseif not projFile.init then
-      Dot.w(string.format("No deinit function found for project: %s!", proj))
-    else
-      projFile.deinit(proj)
+      Dot.w("Can't run dot.lua file for project " .. proj)
     end
   end
 end
@@ -119,11 +112,9 @@ local function main()
   end
 
   if cmd == "init" then
-    execute(init, cmd)
+    execute(function(projects) runForProject(projects, "init") end, cmd)
   elseif cmd == "deinit" then
-    execute(deinit, cmd)
-  elseif string.find(string.lower(arg), "help") then
-    Dot:printHelp()
+    execute(function(projects) runForProject(projects, "deinit") end, cmd)
   else
     Dot:printHelp()
   end
