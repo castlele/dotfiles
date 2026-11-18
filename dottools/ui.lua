@@ -2,7 +2,7 @@
 ---@param self Dot
 ---@param block fun()
 ---@diagnostic disable-next-line: unused-local
-local function hideCursor(self, block)
+Dot.hideCursor = function(self, block)
   io.write("\27[?25l")
   block()
   io.write("\27[?25h\n")
@@ -11,7 +11,7 @@ end
 ---@param self Dot
 ---@param name string
 ---@param steps table<fun(): boolean>
-local function progress(self, name, steps)
+Dot.progress = function(self, name, steps)
   local count = #steps
 
   if count == 0 then
@@ -110,7 +110,7 @@ local function progress(self, name, steps)
     print = rawPrint
 
     if not ok then
-      self.log.e(string.format("Execution finished with error: %s", err))
+      self.e(string.format("Execution finished with error: %s", err))
       lines = lines + 1
       status = false
     end
@@ -118,8 +118,3 @@ local function progress(self, name, steps)
     drawStatus(status)
   end)
 end
-
-return {
-  progress = progress,
-  hideCursor = hideCursor,
-}

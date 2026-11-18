@@ -1,12 +1,7 @@
-local function w(msg)
+Dot.w = function(msg)
   print(string.format("⚠️ \27[33m%s\27[0m", msg))
 end
 
-local function e(msg)
+Dot.e = function(msg)
   print(string.format("🚨 \27[31m%s\27[0m", msg))
 end
-
-return {
-  e = e,
-  w = w,
-}

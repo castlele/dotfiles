@@ -5,6 +5,10 @@
 ---@class Dot
 Dot = {}
 
+require("dottools.cmd")
+require("dottools.log")
+require("dottools.ui")
+
 Dot.home = (function()
   local home = os.getenv("HOME")
 
@@ -19,63 +23,21 @@ Dot.configPath = (function()
   return Dot.home .. "/.config"
 end)()
 
-Dot.log = require("dottools.log")
-Dot.ui = require("dottools.ui")
+---@type "linux-gnu"|"darwin"
+Dot.osType = (function()
+  local handle = io.popen("uname -s")
+  local name = handle and handle:read("*l")
+  if handle then handle:close() end
 
----@return number: result value. 0 is success
-function Dot:symlink(src, dst)
-  local _, err = self:exec(string.format("ln -s %s %s", src, dst))
+  local types = { Darwin = "darwin", Linux = "linux-gnu" }
+  local type = types[name or ""]
 
-  if err then
-    self.log.e("got error during symlink creation: " .. err)
-    return -1
+  if not type then
+    Dot:abort("Can't get OS type from uname: " .. tostring(name))
   end
 
-  return 0
-end
-
----Equals to pwd in terminal
----@param proj string project name from with pwd is requested
----@return string?
-function Dot:pwd(proj)
-  local pwd, err = self:exec("pwd")
-
-  if err then
-    self.log.e("got error during 'pwd' command execution: " .. err)
-    return
-  end
-
-  if not pwd then
-    self.log.e("can't get result of 'pwd' command")
-    return
-  end
-
-  if proj then
-    return pwd .. "/" .. proj
-  end
-
-  return pwd
-end
-
----@return T?, string? - returns result or error message
-function Dot:exec(cmd)
-  local handle, err = io.popen(cmd)
-
-  if err or not handle then
-    return nil, err
-  end
-
-  local result = handle:read("*l")
-
-  handle:close()
-
-  return result
-end
-
-function Dot:abort(msg)
-  Dot.log.e(msg)
-  Dot:exit(-1)
-end
+  return type
+end)()
 
 function Dot:printHelp()
   print("dot init --all               init every project")
@@ -86,10 +48,6 @@ function Dot:printHelp()
   print("dot deinit <name>            deinit project by name separated by space")
   print("dot deinit <name1, name2...> deinit project by name separated by space")
   self:exit(0)
-end
-
-function Dot:exit(code)
-  os.exit(code)
 end
 
 local configs = {
@@ -110,14 +68,14 @@ local function init(projects)
 
     if ok then
       if not projFile then
-        Dot.log.w(string.format("No project file found: %s!", proj))
+        Dot.w(string.format("No project file found: %s!", proj))
       elseif not projFile.init then
-        Dot.log.w(string.format("No init function found for project: %s!", proj))
+        Dot.w(string.format("No init function found for project: %s!", proj))
       else
         projFile.init(proj)
       end
     else
-      Dot.log.w("Can't run dot.lua file for project: " .. proj)
+      Dot.w("Can't run dot.lua file for project: " .. proj)
     end
   end
 end
@@ -127,9 +85,9 @@ local function deinit(projects)
     local projFile = dofile(proj .. "/dot.lua")
 
     if not projFile then
-      Dot.log.w(string.format("No project file found: %s!", proj))
+      Dot.w(string.format("No project file found: %s!", proj))
     elseif not projFile.init then
-      Dot.log.w(string.format("No deinit function found for project: %s!", proj))
+      Dot.w(string.format("No deinit function found for project: %s!", proj))
     else
       projFile.deinit(proj)
     end
@@ -143,7 +101,7 @@ local function main()
 
   local function execute(command, name)
     if #args <= 1 then
-      Dot.log.w("Don't know what to " .. name)
+      Dot.w("Don't know what to " .. name)
       Dot:printHelp()
     end
 
