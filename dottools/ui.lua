@@ -101,7 +101,9 @@ Dot.progress = function(self, name, steps)
       for index, step in ipairs(steps) do
         local stepStatus = step()
 
-        status = stepStatus ~= nil and stepStatus
+        if stepStatus ~= nil then
+          status = stepStatus == true
+        end
 
         drawProgressBar(index)
       end

@@ -54,6 +54,7 @@ end
 local configs = {
   "claude",
   "test",
+  "test2",
 }
 local args = { ... }
 
@@ -66,6 +67,8 @@ end
 --- @param projects table<string>
 --- @param funName string
 local function runForProject(projects, funName)
+  local funs = {}
+
   for _, proj in ipairs(projects) do
     local ok, projFile = pcall(dofile, proj .. "/dot.lua")
 
@@ -79,12 +82,18 @@ local function runForProject(projects, funName)
         ))
       else
         local fun = projFile[funName]
-        fun(proj)
+
+        table.insert(funs, function()
+          print(string.format("Calling %s for %s", funName, proj))
+          return fun(proj)
+        end)
       end
     else
       Dot.w("Can't run dot.lua file for project " .. proj)
     end
   end
+
+  Dot:progress(funName, funs)
 end
 
 local function main()
